@@ -1,0 +1,143 @@
+{
+  "passed": true,
+  "verifiedAt": "2026-10-30T03:38:05.494Z",
+  "nodeVersion": "v24.19.0",
+  "scope": "Actual trace-worker.js using Node Web APIs and local-file transport; comparison with canonical v7 embedded model and unchanged source engine. Browser UI/HTTP checks are separate.",
+  "sourcePageSha256": "6a28ae50f8e221e82a87cbf2ac024224a61b314da64230f088d512445ddcd529",
+  "modelSha256": "725bab536a9054bf01a8d13867fe39800ef30e72097a3879635c333b7fe666cb",
+  "workerSha256": "fe05cd2cedaf9da7335a4fa749af850c14d83db71d81c27c4ea5b74c84a33f63",
+  "N": 105328,
+  "Q": 645,
+  "exactPayloadAndMetadataChecks": true,
+  "cases": [
+    {
+      "k": 0,
+      "evidence": "all",
+      "steps": 37,
+      "stopReason": "confidence",
+      "targetRank": 1,
+      "top": [
+        [
+          0,
+          0.9996833693814838
+        ],
+        [
+          29117,
+          0.0001326147117873323
+        ],
+        [
+          27669,
+          0.000041232609241777756
+        ],
+        [
+          85016,
+          0.000040962229448600424
+        ],
+        [
+          55710,
+          0.00002760054377178574
+        ]
+      ],
+      "irQuestions": 6,
+      "exactMatch": true,
+      "elapsedMs": 5133
+    },
+    {
+      "k": 0,
+      "evidence": "nmr_ms",
+      "steps": 35,
+      "stopReason": "confidence",
+      "targetRank": 1,
+      "top": [
+        [
+          0,
+          0.9993719887290019
+        ],
+        [
+          68951,
+          0.00013689278661841486
+        ],
+        [
+          72702,
+          0.00007486862409537976
+        ],
+        [
+          91443,
+          0.00005489953411082078
+        ],
+        [
+          7419,
+          0.00003269089157543298
+        ]
+      ],
+      "irQuestions": 0,
+      "exactMatch": true,
+      "elapsedMs": 4607
+    },
+    {
+      "k": 105327,
+      "evidence": "all",
+      "steps": 18,
+      "stopReason": "confidence",
+      "targetRank": 1,
+      "top": [
+        [
+          105327,
+          0.9998341865627137
+        ],
+        [
+          62366,
+          0.000046267447296681596
+        ],
+        [
+          16623,
+          0.0000358322474274169
+        ],
+        [
+          46778,
+          0.00002775663219096897
+        ],
+        [
+          55963,
+          0.0000069398565948029814
+        ]
+      ],
+      "irQuestions": 5,
+      "exactMatch": true,
+      "elapsedMs": 2246
+    },
+    {
+      "k": 105327,
+      "evidence": "nmr_ms",
+      "steps": 25,
+      "stopReason": "confidence",
+      "targetRank": 1,
+      "top": [
+        [
+          105327,
+          0.9998201983303352
+        ],
+        [
+          4240,
+          0.000055833743828135484
+        ],
+        [
+          60430,
+          0.00004213696833118768
+        ],
+        [
+          16623,
+          0.000017191599191757977
+        ],
+        [
+          55963,
+          0.00001613209751530488
+        ]
+      ],
+      "irQuestions": 0,
+      "exactMatch": true,
+      "elapsedMs": 3051
+    }
+  ],
+  "progressEvents": 115
+}

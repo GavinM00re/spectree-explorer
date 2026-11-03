@@ -1,0 +1,18 @@
+{
+  "name": "smiles-drawer",
+  "version": "1.2.0",
+  "license": "MIT",
+  "repository": "git+https://github.com/reymond-group/smilesDrawer.git",
+  "tarball": "https://registry.npmjs.org/smiles-drawer/-/smiles-drawer-1.2.0.tgz",
+  "tarballIntegrity": "sha512-JjLsr3Z2WKeYEpZBdVTe32We4CrUCFejAVmvxSrKPVh7j++mY8BxOQnAI6cCsPA7cUNR/OK7q2k3S60TMdP3BA==",
+  "files": {
+    "smiles-drawer-1.2.0.min.js": {
+      "sha256": "c7050f9ab9e99f0001277a049b523bfb457919ead797c9f54a9d683464ced325",
+      "bytes": 156558
+    },
+    "SMILES-DRAWER-LICENSE": {
+      "sha256": "919c7fa7363867d5785a1362aeb1df8ffa62f976db7f963fd57c397c2cbadeb4",
+      "bytes": 1106
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-30T14:28:54.218Z",
+  "scope": "Parser compatibility only; browser rendering requires separate visual checks",
+  "libraryCount": 105328,
+  "parsedCount": 105328,
+  "failures": [],
+  "emptySmiles": 0,
+  "disconnectedSmiles": 0,
+  "CASNames": 32405,
+  "cidOnlyNames": 1,
+  "bundleSha256": "c7050f9ab9e99f0001277a049b523bfb457919ead797c9f54a9d683464ced325",
+  "runtimeVersionField": "1.0.0",
+  "packageVersion": "1.2.0"
+}

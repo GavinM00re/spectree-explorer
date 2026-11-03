@@ -1,0 +1,13 @@
+.molecule-card{min-width:0;padding:1px 0 0;color:#294a5b}
+.molecule-card .molecule-eyebrow{font-size:8px;letter-spacing:1.2px;font-weight:600;color:#718a98;margin:0 0 7px}
+.molecule-card .molecule-name{display:block;font-size:14px;line-height:1.45;overflow-wrap:anywhere;font-weight:600;margin:0 0 4px}
+.molecule-card .molecule-identity{display:block;color:#667f8c;font-size:10px;line-height:1.5;overflow-wrap:anywhere}
+.molecule-card .molecule-name-note{font-size:10px;line-height:1.5;color:#788c97;margin:7px 0}
+.molecule-structure{margin-top:11px;min-height:122px;background:#fff;border:1px solid #dce6eb;border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.molecule-card .molecule-canvas{display:block;width:100%;height:auto;aspect-ratio:24/17}
+.molecule-card [hidden]{display:none!important}
+.molecule-card .molecule-render-status{padding:16px 10px;margin:0;font-size:10px;line-height:1.6;color:#708895;text-align:center}
+.molecule-card .molecule-source{display:block;margin-top:6px;font-size:8px;line-height:1.4;color:#8295a0}
+.molecule-smiles{margin:8px 0 3px;font-size:9px;color:#6c8390}
+.molecule-smiles summary{cursor:pointer;width:fit-content}
+.molecule-smiles code{display:block;overflow-wrap:anywhere;white-space:normal;padding-top:6px;font:9px/1.5 Consolas,monospace;color:#476779}

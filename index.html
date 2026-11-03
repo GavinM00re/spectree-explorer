@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SpecTree Explorer</title>
+  <meta name="description" content="SpecTree identifies small molecules from MS, IR, 1H and 13C NMR by asking the most informative spectral question at each step.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23153636'/%3E%3Cpath d='M8 23V9h16M8 16h11M19 16v7' fill='none' stroke='%237ee1b5' stroke-width='3'/%3E%3C/svg%3E">
+  <style>
+    :root{--ink:#1c3033;--muted:#5f716c;--line:#dfe5e1;--green:#176b51;--deep:#153636;--canvas:#f5f7f4;--paper:#fff}
+    *{box-sizing:border-box}
+    body{margin:0;color:var(--ink);background:var(--canvas);font:16px/1.6 Inter,"Segoe UI",Arial,sans-serif}
+    a{color:var(--green)}
+    header{background:var(--deep);color:#d8e6df;padding:72px 16px 64px}
+    .wrap{max-width:980px;margin:0 auto}
+    .brand{display:flex;gap:12px;align-items:center;font-size:15px;letter-spacing:.4px;color:#9ae0bb}
+    .brand svg{width:34px;height:34px;fill:none;stroke:#9ae0bb;stroke-width:2.5}
+    h1{color:#fff;font-size:clamp(32px,6vw,52px);line-height:1.1;letter-spacing:-1.5px;margin:22px 0 16px;font-weight:650}
+    header p{max-width:640px;font-size:18px;margin:0;color:#c7dbd2}
+    .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:9px;text-decoration:none;font-weight:600;font-size:15px}
+    .btn.primary{background:#7ee1b5;color:var(--deep)}
+    .btn.primary:hover{background:#9aeac6}
+    .btn.ghost{border:1px solid #5c8273;color:#e4f2ea}
+    .btn.ghost:hover{background:#1f4744}
+    main{padding:56px 16px 72px}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:56px}
+    .stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px}
+    .stat b{display:block;font-size:28px;letter-spacing:-.8px;font-weight:650}
+    .stat small{color:var(--muted);font-size:13px}
+    h2{font-size:26px;letter-spacing:-.6px;margin:0 0 18px;font-weight:650}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:56px}
+    .card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column}
+    .card h3{margin:0 0 8px;font-size:18px}
+    .card p{margin:0 0 16px;color:var(--muted);font-size:15px;flex:1}
+    .card a{font-weight:600;text-decoration:none}
+    ol{padding-left:22px;margin:0 0 56px}
+    ol li{margin-bottom:10px}
+    .note{border-left:3px solid #c8dacb;padding-left:14px;color:var(--muted);font-size:14px}
+    footer{border-top:1px solid var(--line);padding:24px 16px;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 24V8h18M7 16h12M19 16v8"/></svg>SPECTREE</div>
+      <h1>Identify a molecule by asking its spectra the right questions.</h1>
+      <p>SpecTree combines mass spectrometry, FTIR, ¹H NMR and ¹³C NMR. At each step it picks the spectral observation that best separates the remaining candidates, until one structure stands out.</p>
+      <div class="cta">
+        <a class="btn primary" href="v7_map/?demo">▶ Run the demo: identify caffeine</a>
+        <a class="btn ghost" href="v7_map/">Explore the model map</a>
+        <a class="btn ghost" href="v7_map/paths.html?cid=2519">See every decision path</a>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat"><b>105,328</b><small>candidate compounds</small></div>
+        <div class="stat"><b>645</b><small>spectral questions</small></div>
+        <div class="stat"><b>4</b><small>techniques: MS · IR · ¹H · ¹³C</small></div>
+        <div class="stat"><b>17</b><small>questions to identify caffeine</small></div>
+      </div>
+
+      <h2>Three ways in</h2>
+      <div class="cards">
+        <div class="card"><h3>Guided demo</h3><p>Watch SpecTree identify caffeine step by step. Each question shows the possible answers, the answer read from the spectra, and how the candidate ranking changes.</p><a href="v7_map/?demo">Start the walkthrough →</a></div>
+        <div class="card"><h3>Model map</h3><p>An interactive Cytoscape.js network of all 645 questions, grouped by technique and family, linked to the model and the full compound library. Search any compound and trace its path.</p><a href="v7_map/">Open the map →</a></div>
+        <div class="card"><h3>Decision-path atlas</h3><p>A radial tree of 1.5 million decision states covering every compound in the library. Search by name, formula or PubChem CID to highlight its complete route.</p><a href="v7_map/paths.html">Open the atlas →</a></div>
+      </div>
+
+      <h2>How the demo works</h2>
+      <ol>
+        <li>Pick a compound, or use the caffeine demo. SpecTree loads that compound's spectral reading.</li>
+        <li>The model chooses the question that best splits its leading candidates, for example “Is there a strong IR band near 1700 cm⁻¹?” or “How many ¹³C signals are there?”</li>
+        <li>The reading answers the question. Every candidate's probability is updated, and gold arrows on the map trace the order of the questions.</li>
+        <li>It stops when one structure passes 99.9% probability, after 60 questions, or when no useful question is left. Use <em>Next</em> and <em>Previous</em> to step through each decision.</li>
+      </ol>
+
+      <p class="note">The readings in this demo are simulated spectra generated for each library compound, not newly measured experimental data. Probabilities are model outputs. Everything runs in your browser; no server or account is needed.</p>
+    </div>
+  </main>
+  <footer><div class="wrap">SpecTree · Texas A&amp;M University · Built with Cytoscape.js and SmilesDrawer (MIT licences in <code>v7_map/vendor/</code>).</div></footer>
+</body>
+</html>

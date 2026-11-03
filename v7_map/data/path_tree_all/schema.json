@@ -1,0 +1,169 @@
+{
+  "status": "complete",
+  "version": 1,
+  "binary": "tree.bin",
+  "littleEndian": true,
+  "evidence": "all",
+  "nodeCount": 1524318,
+  "terminalCount": 105327,
+  "maxDepth": 60,
+  "candidateCount": 105328,
+  "N": 105328,
+  "Q": 645,
+  "root": 0,
+  "totalReadings": 105328,
+  "completedReadings": 105328,
+  "fitCompounds": 75706,
+  "fields": {
+    "parent": {
+      "dtype": "int32",
+      "offset": 0,
+      "length": 1524318
+    },
+    "q": {
+      "dtype": "int16",
+      "offset": 6097272,
+      "length": 1524318
+    },
+    "answer": {
+      "dtype": "uint8",
+      "offset": 9145912,
+      "length": 1524318
+    },
+    "depth": {
+      "dtype": "uint8",
+      "offset": 10670232,
+      "length": 1524318
+    },
+    "count": {
+      "dtype": "uint32",
+      "offset": 12194552,
+      "length": 1524318
+    },
+    "terminalReason": {
+      "dtype": "uint8",
+      "offset": 18291824,
+      "length": 1524318
+    },
+    "topIndex": {
+      "dtype": "int32",
+      "offset": 19816144,
+      "length": 1524318
+    },
+    "p1": {
+      "dtype": "float64",
+      "offset": 25913416,
+      "length": 1524318
+    },
+    "lo": {
+      "dtype": "uint32",
+      "offset": 38107960,
+      "length": 1524318
+    },
+    "compoundLeaf": {
+      "dtype": "int32",
+      "offset": 44205232,
+      "length": 105328
+    },
+    "orderedCompounds": {
+      "dtype": "int32",
+      "offset": 44626544,
+      "length": 105328
+    }
+  },
+  "blocks": [
+    {
+      "name": "parent",
+      "dtype": "int32",
+      "offset": 0,
+      "length": 1524318
+    },
+    {
+      "name": "q",
+      "dtype": "int16",
+      "offset": 6097272,
+      "length": 1524318
+    },
+    {
+      "name": "answer",
+      "dtype": "uint8",
+      "offset": 9145912,
+      "length": 1524318
+    },
+    {
+      "name": "depth",
+      "dtype": "uint8",
+      "offset": 10670232,
+      "length": 1524318
+    },
+    {
+      "name": "count",
+      "dtype": "uint32",
+      "offset": 12194552,
+      "length": 1524318
+    },
+    {
+      "name": "terminalReason",
+      "dtype": "uint8",
+      "offset": 18291824,
+      "length": 1524318
+    },
+    {
+      "name": "topIndex",
+      "dtype": "int32",
+      "offset": 19816144,
+      "length": 1524318
+    },
+    {
+      "name": "p1",
+      "dtype": "float64",
+      "offset": 25913416,
+      "length": 1524318
+    },
+    {
+      "name": "lo",
+      "dtype": "uint32",
+      "offset": 38107960,
+      "length": 1524318
+    },
+    {
+      "name": "compoundLeaf",
+      "dtype": "int32",
+      "offset": 44205232,
+      "length": 105328
+    },
+    {
+      "name": "orderedCompounds",
+      "dtype": "int32",
+      "offset": 44626544,
+      "length": 105328
+    }
+  ],
+  "terminalReasons": {
+    "0": "internal",
+    "1": "confidence",
+    "2": "question_limit",
+    "3": "no_useful_question"
+  },
+  "semantics": {
+    "node": "Model state before asking q; q=-1 is a canonical stopping state",
+    "answer": "Observed answer on the incoming edge; root=255",
+    "count": "Stored draw-0 readings sharing this ordered prefix, not surviving model candidates",
+    "lo": "Start of contiguous membership interval in orderedCompounds; length=count",
+    "p1": "Leading normalized model posterior at this state; all candidates remain scored"
+  },
+  "binaryBytes": 45047856,
+  "binarySha256": "236675cdf51c0250d6f200dec5356528a821e87c47a2c9659638b5f316bea846",
+  "fingerprint": "e94371782767c59845e1c27fd269422f46aa5e1ac7004d4a2b14e28e51c13188",
+  "provenance": {
+    "sourceModelSha256": "725bab536a9054bf01a8d13867fe39800ef30e72097a3879635c333b7fe666cb",
+    "sourcePageSha256": "6a28ae50f8e221e82a87cbf2ac024224a61b314da64230f088d512445ddcd529",
+    "sourceLibrarySha256": "5e0c8e1f18963f02fb5505a1e91397ff2cef1e7aef95c25211b68cb7c1db6583",
+    "optimizedEngineSha256": "92a52bc3594eb1d5e3be1cbe8a8cfa08dbb7f490372d7d29c910551304307d7c",
+    "sourceBuild": "2026-10-29 18:29",
+    "reading": "Each compound's canonical v7 test-stream draw 0 (simulated noisy spectra).",
+    "originalModelUnchanged": true,
+    "cohort": "Every canonical v7 library compound's stored test-stream draw 0",
+    "completedAt": "2026-10-30T14:09:09.853Z"
+  }
+}

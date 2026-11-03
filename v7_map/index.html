@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SpecTree · v7 Network Explorer</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23153636'/%3E%3Cpath d='M8 23V9h16M8 16h11M19 16v7' fill='none' stroke='%237ee1b5' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="molecule-card.css">
+  <script defer src="vendor/cytoscape-3.33.1.min.js"></script>
+  <script defer src="network-layout.js"></script>
+  <script defer src="vendor/smiles-drawer-1.2.0.min.js"></script>
+  <script defer src="molecule-card.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 24V8h18M7 16h12M19 16v8"/></svg><strong>SpecTree</strong><span class="brand-divider">/</span><span>Network Explorer</span></a>
+    <div class="top-meta"><span class="version">v7</span><span id="dataset-status">Loading model…</span><span class="local-badge">LOCAL</span></div>
+  </header>
+  <main class="workspace inspector-closed">
+    <aside class="sidebar">
+      <div class="section-eyebrow">EXPLORE THE MODEL</div>
+      <nav class="view-nav" aria-label="Map views">
+        <a class="path-tree-nav" href="paths.html"><span class="nav-icon">⑂</span> All decision paths <span class="nav-number">NEW</span></a>
+        <button data-view="architecture" class="active"><span class="nav-icon">⌘</span> Full network <span class="nav-number">01</span></button>
+        <button data-view="questions"><span class="nav-icon">▦</span> Question bank <span class="nav-number">02</span></button>
+        <button data-view="trace"><span class="nav-icon">↳</span> Decision path <span class="nav-number">03</span></button>
+      </nav>
+      <section class="network-settings"><div class="section-eyebrow">NETWORK DISPLAY</div><label for="label-mode">Node labels</label><select id="label-mode"><option value="auto">Automatic · labels on zoom</option><option value="all">All labels</option><option value="off">Hide labels</option></select><label for="node-scale">Node size</label><input id="node-scale" type="range" min="0.6" max="2.4" value="1" step="0.2"><label class="checkbox-label"><input id="model-links" type="checkbox" checked> Show model associations</label><p class="quiet">All 645 questions shown.<br>105,328 compounds in expandable library groups.</p></section>
+      <section class="library-panel">
+        <div class="section-eyebrow">FOLLOW A COMPOUND</div>
+        <label for="compound-search">Search the full library</label>
+        <div class="search-box"><span aria-hidden="true">⌕</span><input id="compound-search" type="search" placeholder="Name, formula or PubChem CID" autocomplete="off" aria-controls="search-results" disabled></div>
+        <div id="search-results" class="search-results" aria-live="polite"></div>
+        <div id="chosen-compound" class="chosen-compound"><span class="quiet">Choose a compound to trace its decisions.</span></div>
+        <label for="evidence">Available evidence</label>
+        <select id="evidence"><option value="all">IR + MS + ¹H + ¹³C NMR</option><option value="nmr_ms">MS + ¹H + ¹³C NMR</option></select>
+        <button id="trace-button" class="primary" disabled>Trace decision path <span>↗</span></button>
+        <button id="random-button" class="subtle wide" disabled>Choose a random compound</button>
+        <div id="trace-status" class="trace-status" role="status"></div>
+        <button id="cancel-trace" class="subtle" hidden>Cancel calculation</button>
+      </section>
+      <section id="question-tools" hidden>
+        <div class="section-eyebrow">FIND A QUESTION</div>
+        <input id="question-search" type="search" placeholder="Question text or ID" aria-label="Search questions">
+        <div id="question-results" class="search-results"></div>
+      </section>
+      <div class="sidebar-foot"><span class="status-dot"></span><span id="library-status">Reading v7 metadata</span><small>Adaptive probabilities · full candidate set</small></div>
+    </aside>
+    <section class="map-section">
+      <div class="map-heading"><div><div id="view-eyebrow" class="section-eyebrow">01 / FULL MODEL NETWORK</div><h1 id="view-title">Full model network</h1><p id="view-description">Every question. Every library group. One connected view.</p></div><div class="header-tools"><button id="toggle-table">Node table</button><button id="toggle-inspector">Details</button><button id="export-image" class="icon-button" title="Download map as PNG" aria-label="Download map as PNG">↓</button></div></div>
+      <div class="map-wrap">
+        <div id="cy" role="img" aria-label="Interactive model map. Use the section buttons and inspector for keyboard access."></div>
+        <div id="map-loading" class="map-message"><div class="spinner"></div><h2>Opening the v7 atlas</h2><p>Reading the model and its full compound library.</p></div>
+        <div id="trace-empty" class="map-message" hidden><div class="empty-symbol">↳</div><h2>Every compound has a path.</h2><p>Search the library, then trace the questions<br>the v7 engine chooses for that compound.</p><button class="primary" id="empty-random">Try a random compound ↗</button></div>
+        <div class="map-toolbar"><button id="zoom-in" aria-label="Zoom in" title="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out" title="Zoom out">−</button><span id="zoom-value">100%</span><button id="fit-map" title="Fit entire map">Fit all</button><button id="focus-selection">Fit selection</button><button id="reset-map" title="Reset this view">Reset</button></div>
+        <div id="architecture-controls" class="map-actions"><button id="expand-all">Expand model components</button><button id="collapse-all">Collapse groups</button><span id="network-count"></span></div>
+        <div class="legend" aria-label="Technique colors"><span><i style="--key:#d79a38"></i>IR</span><span><i style="--key:#4b8ddb"></i>MS</span><span><i style="--key:#e46b67"></i>¹H</span><span><i style="--key:#a77dde"></i>¹³C</span><span><i style="--key:#4ab7a5"></i>Library</span></div>
+        <div id="minimap" title="Click to navigate the network"><canvas id="mini-canvas" width="190" height="125" aria-label="Network overview"></canvas><div id="mini-viewport"></div><span>OVERVIEW</span></div>
+        <div id="map-hint" class="map-hint">Drag to pan · Scroll to zoom · Click to inspect</div>
+      </div>
+      <section id="node-table" hidden><div class="table-toolbar"><strong>Network nodes</strong><input id="table-filter" type="search" placeholder="Filter nodes by label or type" aria-label="Filter node table"><span id="table-count"></span><button id="table-prev">←</button><button id="table-next">→</button></div><div class="table-scroll"><table><thead><tr><th>Type</th><th>Label / identifier</th><th>Technique</th><th>Members</th></tr></thead><tbody id="node-table-body"></tbody></table></div></section>
+      <div class="map-footer"><span id="map-summary">Full architecture · v7</span><span>Powered by Cytoscape.js</span></div>
+    </section>
+    <aside class="inspector" aria-label="Selected node details"><div class="inspector-top"><span class="section-eyebrow">INSPECTOR</span><button id="clear-selection" class="subtle" title="Clear selection">↺</button><button id="close-inspector" class="subtle" title="Close inspector" aria-label="Close inspector">×</button></div><div id="inspector-content" aria-live="polite"></div><section id="step-navigation" aria-label="Path steps" hidden><div class="step-navigation-heading"><span class="section-eyebrow">PATH STEPS</span><span id="step-progress"></span></div><div id="step-list"></div></section></aside>
+  </main>
+  <div id="toast" role="status" hidden></div>
+</body>
+</html>

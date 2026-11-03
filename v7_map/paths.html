@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SpecTree · All v7 decision paths</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23153636'/%3E%3Cpath d='M8 23V9h16M8 16h11M19 16v7' fill='none' stroke='%237ee1b5' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="path-tree.css">
+  <style>
+    html,body{height:100%;overflow:hidden}#path-tree{height:calc(100dvh - 52px);min-height:400px}.paths-return{color:#d8e6df;text-decoration:none;border:1px solid #587279;border-radius:5px;padding:5px 10px}.paths-return:hover{background:#284851}.paths-boot{display:grid;place-content:center;text-align:center;height:100%;color:#556d77}.paths-boot p{max-width:480px}.paths-boot code{font-size:12px}.paths-boot button{justify-self:center}@media(max-width:600px){.brand>span:not(.brand-divider){display:none}.top-meta{gap:7px}.paths-return{font-size:10px}}
+  </style>
+  <script defer src="vendor/cytoscape-3.33.1.min.js"></script>
+  <script defer src="path-tree.js"></script>
+  <script defer src="paths-page.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="paths.html"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 24V8h18M7 16h12M19 16v8"/></svg><strong>SpecTree</strong><span class="brand-divider">/</span><span>Decision Path Atlas</span></a>
+    <div class="top-meta"><span class="version">v7</span><span id="path-dataset-status">Full library</span><a class="paths-return" href="./">Architecture map ↗</a></div>
+  </header>
+  <main id="path-tree" aria-label="All-library decision path tree"><div class="paths-boot" role="status"><h1>Opening the decision tree</h1><p>Loading the full v7 library and its shared decision paths.</p></div></main>
+</body>
+</html>

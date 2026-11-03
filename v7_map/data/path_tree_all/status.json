@@ -1,0 +1,17 @@
+{
+  "status": "complete",
+  "evidence": "all",
+  "totalReadings": 105328,
+  "completedReadings": 105328,
+  "nodeCount": 1524318,
+  "terminalCount": 105327,
+  "elapsedSeconds": 242.372,
+  "completedAt": "2026-10-30T14:09:09.854Z",
+  "schema": "schema.json",
+  "validation": {
+    "passed": true,
+    "report": "validation.json",
+    "binarySha256": "236675cdf51c0250d6f200dec5356528a821e87c47a2c9659638b5f316bea846"
+  },
+  "validationCompletedAt": "2026-10-30T14:09:19.768Z"
+}
