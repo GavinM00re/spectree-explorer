@@ -26,6 +26,7 @@ const SECTIONS = [
 let meta, library, cy, lowerNames, families = [];
 let view = "architecture", selectedK = null, result = null, worker = null, requestId = 0, busy = false;
 let currentStep = -1, activeSection = null, activeDetail = null, tablePage = 0, miniTransform = null;
+let inspectorActionFocused = false;
 const expandedChunks = new Set(), expandedSections = new Set();
 const TABLE_SIZE = 100;
 
@@ -40,13 +41,19 @@ function nameOf(k) { return library.name[k] || `CID ${library.id[k]}`; }
 function shortText(text, max = 75) { return text.length > max ? text.slice(0, max - 1) + "…" : text; }
 function answerText(q, a) { return `${q.options[a] ?? a}${q.unit ? ` ${q.unit}` : ""}`; }
 function openInspector(open = true) {
+  const returnFocus = !open && document.querySelector(".inspector").contains(document.activeElement);
   document.querySelector(".workspace").classList.toggle("inspector-closed", !open);
   $("toggle-inspector").setAttribute("aria-expanded", String(open));
+  if (returnFocus) $("toggle-inspector").focus({preventScroll:true});
   requestAnimationFrame(() => { if (cy) { cy.resize(); updateMiniViewport(); } });
 }
 function inspect(html) {
   openInspector(); activeSection = null; activeDetail = null;
   $("inspector-content").innerHTML = html; $("inspector-content").scrollTop = 0;
+  if (inspectorActionFocused) {
+    const heading = $("inspector-content").querySelector("h2");
+    if (heading) { heading.tabIndex = -1; heading.focus({preventScroll:true}); }
+  }
 }
 
 function graphStyles() {
@@ -140,7 +147,13 @@ function focusNodes(nodes, maxZoom = 2) {
 }
 function focusNode(id) {
   const n = cy.getElementById(id); if (!n.length) return;
-  cy.stop(); cy.animate({center:{eles:n},zoom:Math.max(cy.zoom(),2)},{duration:180});
+  const zoom = Math.max(cy.zoom(),2);
+  cy.stop();
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    cy.zoom(zoom); cy.center(n);
+  } else {
+    cy.animate({center:{eles:n},zoom},{duration:180});
+  }
 }
 function focusSelection() {
   const selected = cy.nodes(".selected");
@@ -358,6 +371,10 @@ function handleAction(action,id) {
 }
 
 function wireControls() {
+  document.querySelector(".inspector").addEventListener("click",event=>{
+    inspectorActionFocused = event.target.closest("button") === document.activeElement;
+    setTimeout(()=>{ inspectorActionFocused = false; },0);
+  },true);
   document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>setView(b.dataset.view));
   for(const id of ["inspector-content","chosen-compound"]){$(id).onclick=e=>{const b=e.target.closest("button[data-action]");if(b)handleAction(b.dataset.action,b.dataset.id);};}
   $("toggle-inspector").onclick=()=>openInspector(document.querySelector(".workspace").classList.contains("inspector-closed"));$("close-inspector").onclick=()=>openInspector(false);
@@ -389,7 +406,7 @@ function wireControls() {
 async function init() {
   try {
     if(typeof cytoscape!=="function"||typeof SpecTreeNetwork==="undefined")throw new Error("A viewer script could not load. Keep the vendor and network-layout files with the map.");
-    const responses=await Promise.all([fetch("data/meta.json"),fetch("data/library.json")]);if(responses.some(r=>!r.ok))throw new Error("Could not load the v7 data. Start this viewer with serve.cjs.");
+    const responses=await Promise.all([fetch("data/meta.json"),fetch("data/library.json")]);if(responses.some(r=>!r.ok))throw new Error("A required model or compound-library file could not be loaded.");
     [meta,library]=await Promise.all(responses.map(r=>r.json()));if(library.id.length!==meta.N||meta.questions.length!==meta.Q)throw new Error("Model and library counts do not match.");
     lowerNames=library.name.map(n=>(n||"").toLowerCase());families=SpecTreeNetwork.familyList(meta);
     cy=cytoscape({container:$("cy"),style:graphStyles(),elements:[],minZoom:.03,maxZoom:12,wheelSensitivity:.17,boxSelectionEnabled:false,autounselectify:true});
@@ -403,7 +420,13 @@ async function init() {
     const params=new URLSearchParams(location.search),deepCid=params.get("cid")||(params.has("demo")?"2519":null);
     if(deepCid){const k=library.id.findIndex(id=>String(id)===deepCid);if(k>=0){if(params.get("evidence")==="nmr_ms")$("evidence").value="nmr_ms";choose(k);startTrace();}else toast(`CID ${deepCid} is not in the library.`);}
   } catch(e) {
-    $("map-loading").hidden=false;$("map-loading").innerHTML=`<h2>Could not open the network</h2><p>${esc(e.message)}</p><p>Run <code>node phase1/app/v7_map/serve.cjs</code> from the SpecTree folder and open its local URL.</p>`;$("dataset-status").textContent="Load failed";console.error(e);
+    const loading = $("map-loading");
+    loading.hidden=false;
+    loading.setAttribute("role","alert");
+    loading.innerHTML=`<h2>The map could not open</h2><p>One of the files needed for this view did not load. Try again, or return home to choose another view.</p><button type="button" id="retry-map">Try again</button><p><a href="./">Back to home</a></p><details><summary>Technical details</summary><p>${esc(e.message)}</p></details>`;
+    $("retry-map").onclick=()=>{ $("retry-map").disabled=true; $("retry-map").textContent="Reopening…"; location.reload(); };
+    $("dataset-status").textContent="Map unavailable";
+    console.error(e);
   }
 }
 init();

@@ -2,68 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>SpecTree · v7 Network Explorer</title>
+  <title>SpecTree · Follow the clues. Find the molecule.</title>
+  <meta name="description" content="Explore how SpecTree identifies molecules, one question at a time. Try a guided example with no chemistry background, or use your own spectral observations.">
+  <meta name="theme-color" content="#153636">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23153636'/%3E%3Cpath d='M8 23V9h16M8 16h11M19 16v7' fill='none' stroke='%237ee1b5' stroke-width='3'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="molecule-card.css">
-  <script defer src="vendor/cytoscape-3.33.1.min.js"></script>
-  <script defer src="network-layout.js"></script>
-  <script defer src="vendor/smiles-drawer-1.2.0.min.js"></script>
-  <script defer src="molecule-card.js"></script>
-  <script defer src="app.js"></script>
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="mode-nav.css"><link rel="stylesheet" href="home.css"><link rel="stylesheet" href="polish.css">
+  <script defer src="home.js"></script>
 </head>
-<body>
+<body class="home-page">
+  <a class="skip-link" href="#main">Skip to content</a>
   <header class="topbar">
-    <a class="brand" href="./"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 24V8h18M7 16h12M19 16v8"/></svg><strong>SpecTree</strong><span class="brand-divider">/</span><span>Network Explorer</span></a>
-    <div class="top-meta"><span class="version">v7</span><span id="dataset-status">Loading model…</span><span class="local-badge">LOCAL</span></div>
+    <a class="brand" href="./" aria-label="SpecTree home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 24V8h18M7 16h12M19 16v8"/></svg><strong>SpecTree</strong><span class="version">v7</span></a>
+    <nav class="mode-nav" aria-label="Viewer modes"><a href="architecture.html">Architecture View</a><a href="identification.html">Compound Identification</a><a href="paths.html">Full Path</a></nav>
   </header>
-  <main class="workspace inspector-closed">
-    <aside class="sidebar">
-      <div class="section-eyebrow">EXPLORE THE MODEL</div>
-      <nav class="view-nav" aria-label="Map views">
-        <a class="path-tree-nav" href="paths.html"><span class="nav-icon">⑂</span> All decision paths <span class="nav-number">NEW</span></a>
-        <button data-view="architecture" class="active"><span class="nav-icon">⌘</span> Full network <span class="nav-number">01</span></button>
-        <button data-view="questions"><span class="nav-icon">▦</span> Question bank <span class="nav-number">02</span></button>
-        <button data-view="trace"><span class="nav-icon">↳</span> Decision path <span class="nav-number">03</span></button>
-      </nav>
-      <section class="network-settings"><div class="section-eyebrow">NETWORK DISPLAY</div><label for="label-mode">Node labels</label><select id="label-mode"><option value="auto">Automatic · labels on zoom</option><option value="all">All labels</option><option value="off">Hide labels</option></select><label for="node-scale">Node size</label><input id="node-scale" type="range" min="0.6" max="2.4" value="1" step="0.2"><label class="checkbox-label"><input id="model-links" type="checkbox" checked> Show model associations</label><p class="quiet">All 645 questions shown.<br>105,328 compounds in expandable library groups.</p></section>
-      <section class="library-panel">
-        <div class="section-eyebrow">FOLLOW A COMPOUND</div>
-        <label for="compound-search">Search the full library</label>
-        <div class="search-box"><span aria-hidden="true">⌕</span><input id="compound-search" type="search" placeholder="Name, formula or PubChem CID" autocomplete="off" aria-controls="search-results" disabled></div>
-        <div id="search-results" class="search-results" aria-live="polite"></div>
-        <div id="chosen-compound" class="chosen-compound"><span class="quiet">Choose a compound to trace its decisions.</span></div>
-        <label for="evidence">Available evidence</label>
-        <select id="evidence"><option value="all">IR + MS + ¹H + ¹³C NMR</option><option value="nmr_ms">MS + ¹H + ¹³C NMR</option></select>
-        <button id="trace-button" class="primary" disabled>Trace decision path <span>↗</span></button>
-        <button id="random-button" class="subtle wide" disabled>Choose a random compound</button>
-        <div id="trace-status" class="trace-status" role="status"></div>
-        <button id="cancel-trace" class="subtle" hidden>Cancel calculation</button>
-      </section>
-      <section id="question-tools" hidden>
-        <div class="section-eyebrow">FIND A QUESTION</div>
-        <input id="question-search" type="search" placeholder="Question text or ID" aria-label="Search questions">
-        <div id="question-results" class="search-results"></div>
-      </section>
-      <div class="sidebar-foot"><span class="status-dot"></span><span id="library-status">Reading v7 metadata</span><small>Adaptive probabilities · full candidate set</small></div>
-    </aside>
-    <section class="map-section">
-      <div class="map-heading"><div><div id="view-eyebrow" class="section-eyebrow">01 / FULL MODEL NETWORK</div><h1 id="view-title">Full model network</h1><p id="view-description">Every question. Every library group. One connected view.</p></div><div class="header-tools"><button id="toggle-table">Node table</button><button id="toggle-inspector">Details</button><button id="export-image" class="icon-button" title="Download map as PNG" aria-label="Download map as PNG">↓</button></div></div>
-      <div class="map-wrap">
-        <div id="cy" role="img" aria-label="Interactive model map. Use the section buttons and inspector for keyboard access."></div>
-        <div id="map-loading" class="map-message"><div class="spinner"></div><h2>Opening the v7 atlas</h2><p>Reading the model and its full compound library.</p></div>
-        <div id="trace-empty" class="map-message" hidden><div class="empty-symbol">↳</div><h2>Every compound has a path.</h2><p>Search the library, then trace the questions<br>the v7 engine chooses for that compound.</p><button class="primary" id="empty-random">Try a random compound ↗</button></div>
-        <div class="map-toolbar"><button id="zoom-in" aria-label="Zoom in" title="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out" title="Zoom out">−</button><span id="zoom-value">100%</span><button id="fit-map" title="Fit entire map">Fit all</button><button id="focus-selection">Fit selection</button><button id="reset-map" title="Reset this view">Reset</button></div>
-        <div id="architecture-controls" class="map-actions"><button id="expand-all">Expand model components</button><button id="collapse-all">Collapse groups</button><span id="network-count"></span></div>
-        <div class="legend" aria-label="Technique colors"><span><i style="--key:#d79a38"></i>IR</span><span><i style="--key:#4b8ddb"></i>MS</span><span><i style="--key:#e46b67"></i>¹H</span><span><i style="--key:#a77dde"></i>¹³C</span><span><i style="--key:#4ab7a5"></i>Library</span></div>
-        <div id="minimap" title="Click to navigate the network"><canvas id="mini-canvas" width="190" height="125" aria-label="Network overview"></canvas><div id="mini-viewport"></div><span>OVERVIEW</span></div>
-        <div id="map-hint" class="map-hint">Drag to pan · Scroll to zoom · Click to inspect</div>
+  <main id="main" class="home-main">
+    <section class="home-hero" aria-labelledby="hero-title">
+      <div class="hero-copy"><span class="section-eyebrow">CHEMICAL CLUES. CLEARER DECISIONS.</span><h1 id="hero-title">Find a molecule.<br><em>One question <br>at a time.</em></h1><p class="hero-lead">A spectrum is a chemical fingerprint. SpecTree asks questions about those fingerprints to work out which molecule fits best.</p><div class="hero-actions"><a class="tour-cta" href="identification.html?mode=guided&amp;cid=2519">Try the guided example <span aria-hidden="true">→</span></a><a class="own-cta" href="identification.html?mode=own">Use your own data ↗</a></div><p class="hero-reassurance">New to chemistry? The tour supplies the answers.<br>No account, download, or lab data needed.</p></div>
+      <div class="hero-story" aria-label="How the guided example works">
+        <div class="story-label"><span class="live-dot"></span>A LOOK INSIDE THE GUIDED EXAMPLE</div>
+        <div class="story-step"><span class="story-number">1</span><div><small>START WITH POSSIBILITIES</small><strong>105,328 molecules</strong><p>The full library is considered at every step.</p></div></div>
+        <div class="story-connector" aria-hidden="true"></div>
+        <div class="story-step story-question"><span class="story-number">2</span><div><small>LOOK FOR A CLUE</small><strong>How heavy is the molecule?</strong><p>The first question uses a clue from its mass spectrum.</p><svg viewBox="0 0 330 64" aria-hidden="true"><path d="M2 58H328" stroke="#cfdfda"/><path d="M12 58V50M29 58V42M45 58V54M66 58V32M72 58V40M92 58V50M112 58V18M117 58V31M140 58V43M164 58V24M170 58V34M201 58V45M226 58V37M248 58V13M270 58V47M296 58V31" fill="none" stroke="#367d94" stroke-width="2"/></svg><span class="story-caption">Illustration of spectral peaks</span></div></div>
+        <div class="story-connector" aria-hidden="true"></div>
+        <div class="story-step"><span class="story-number">3</span><div><small>FOLLOW THE EVIDENCE</small><strong>A better-informed next question</strong><p>Each answer updates the ranking. You decide when to move on.</p></div></div>
+        <div class="story-foot">Real v7 model <span>·</span> Simulated example data</div>
       </div>
-      <section id="node-table" hidden><div class="table-toolbar"><strong>Network nodes</strong><input id="table-filter" type="search" placeholder="Filter nodes by label or type" aria-label="Filter node table"><span id="table-count"></span><button id="table-prev">←</button><button id="table-next">→</button></div><div class="table-scroll"><table><thead><tr><th>Type</th><th>Label / identifier</th><th>Technique</th><th>Members</th></tr></thead><tbody id="node-table-body"></tbody></table></div></section>
-      <div class="map-footer"><span id="map-summary">Full architecture · v7</span><span>Powered by Cytoscape.js</span></div>
     </section>
-    <aside class="inspector" aria-label="Selected node details"><div class="inspector-top"><span class="section-eyebrow">INSPECTOR</span><button id="clear-selection" class="subtle" title="Clear selection">↺</button><button id="close-inspector" class="subtle" title="Close inspector" aria-label="Close inspector">×</button></div><div id="inspector-content" aria-live="polite"></div><section id="step-navigation" aria-label="Path steps" hidden><div class="step-navigation-heading"><span class="section-eyebrow">PATH STEPS</span><span id="step-progress"></span></div><div id="step-list"></div></section></aside>
+    <section class="home-quickfacts" aria-label="Model at a glance"><div><b>105,328</b><span>candidate molecules</span></div><div><b>645</b><span>questions the model can ask</span></div><div><b>4</b><span>types of spectral evidence</span></div><div><b>In your browser</b><span>your answers stay on your device</span></div></section>
+    <section class="home-explore" aria-labelledby="explore-title"><div class="explore-heading"><span class="section-eyebrow">GO A LITTLE DEEPER</span><h2 id="explore-title">Choose your way in.</h2><p>Start with an example, or explore how the decisions are made.</p></div>
+      <div class="mode-cards">
+        <section class="mode-card"><span class="mode-number">01 / ARCHITECTURE VIEW</span><h3>See how it works</h3><p>A map of the questions, evidence types, and library. Click any part to learn what it does.</p><a href="architecture.html">Explore the model <span aria-hidden="true">↗</span></a></section>
+        <section class="mode-card featured"><span class="mode-number">02 / COMPOUND IDENTIFICATION</span><h3>Try an identification</h3><p>Answer questions from your own spectra, or practice reading a supplied synthetic example.</p><div class="card-links"><a href="identification.html?mode=own">Use my data ↗</a><a href="identification.html?mode=synthetic">Practice with an example ↗</a></div></section>
+        <section class="mode-card"><span class="mode-number">03 / FULL PATH</span><h3>Follow every branch</h3><p>Zoom into the full decision tree. Each branch shows a different sequence of clues in the stored examples.</p><a href="paths.html">Explore the paths <span aria-hidden="true">↗</span></a></section>
+      </div>
+    </section>
+    <section class="home-about" aria-labelledby="about-title"><div><span class="section-eyebrow">A LITTLE CONTEXT</span><h2 id="about-title">What are we looking at?</h2></div><div class="home-faq"><details><summary>What is a spectrum?</summary><p>A spectrum is a set of measurements that gives clues about a substance. The position, size, or shape of its peaks can tell a chemist about the molecule’s mass, bonds, or atoms.</p></details><details><summary>What do MS, IR, and NMR mean?</summary><p><strong>MS</strong> (mass spectrometry) gives clues about mass and fragments. <strong>IR</strong> (infrared spectroscopy) gives clues about bonds. <strong>¹H NMR</strong> looks at hydrogen environments; <strong>¹³C NMR</strong> looks at carbon environments.</p></details><details><summary>Is this a confirmed identification?</summary><p>It is a model’s best match within its library. The examples use simulated noisy data, and the percentages are model probabilities, not measured accuracy. Experimental samples need independent confirmation.</p></details><details><summary>Can I use my own files?</summary><p>For now, keep your spectra beside you and answer the questions from your observations. The tool does not import raw instrument files. The guided example is a good place to learn the workflow first.</p></details></div></section>
+    <footer class="home-foot"><span>SpecTree · v7 · A research prototype</span><span>Simulated examples. Transparent decisions.</span></footer>
   </main>
-  <div id="toast" role="status" hidden></div>
 </body>
 </html>

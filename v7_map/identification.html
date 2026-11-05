@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SpecTree · Compound Identification</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23153636'/%3E%3Cpath d='M8 23V9h16M8 16h11M19 16v7' fill='none' stroke='%237ee1b5' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="mode-nav.css">
+  <link rel="stylesheet" href="identification.css">
+  <link rel="stylesheet" href="molecule-card.css">
+  <link rel="stylesheet" href="polish.css">
+  <script defer src="vendor/smiles-drawer-1.2.0.min.js"></script>
+  <script defer src="molecule-card.js"></script>
+  <script defer src="identification.js"></script>
+</head>
+<body class="identification-page">
+  <a class="skip-link" href="#identification-main">Skip to content</a>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="SpecTree home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 24V8h18M7 16h12M19 16v8"/></svg><strong>SpecTree</strong><span class="version">v7</span></a>
+    <nav class="mode-nav" aria-label="Viewer modes"><a href="architecture.html">Architecture View</a><a href="identification.html" aria-current="page">Compound Identification</a><a href="paths.html">Full Path</a></nav>
+  </header>
+  <main id="identification-main" class="identify-main">
+    <section id="identify-setup" class="identify-setup">
+      <div class="section-eyebrow">COMPOUND IDENTIFICATION</div>
+      <h1>Identify a molecule, one clue at a time.</h1>
+      <p class="identify-intro">A spectrum is a set of clues about a molecule. SpecTree asks a question, weighs the answer against its library, and decides what to ask next.</p>
+      <button id="start-guided" class="guided-start" disabled><span><strong>New here? Try the guided example.</strong><small>No chemistry background needed. We supply the answers; you follow the decisions.</small></span><b>Start walkthrough →</b></button>
+      <p id="setup-status" class="identify-status" role="status">Loading the v7 library…</p>
+      <div class="identify-evidence"><label for="identify-evidence">Available evidence</label><select id="identify-evidence"><option value="all">IR + MS + ¹H + ¹³C NMR</option><option value="nmr_ms">MS + ¹H + ¹³C NMR</option></select></div>
+      <div class="identify-options">
+        <button class="identify-choice" id="start-own" disabled><span class="choice-number">01</span><strong>Use your own data</strong><span>Read your own spectra and answer the model’s questions. Your observations guide the identification.</span><b>Start identification →</b></button>
+        <button class="identify-choice" id="start-synthetic" disabled><span class="choice-number">02</span><strong>Given synthetic data</strong><span>Try a stored synthetic example from the full v7 library, with MS, NMR and IR readings to explore.</span><b>Try a synthetic example →</b></button>
+      </div>
+      <p class="identify-note">Own-data mode accepts your answers to questions; it does not import raw instrument files. Synthetic examples use the model’s stored noisy test readings.</p>
+    </section>
+    <section id="identify-session" hidden>
+      <div class="identify-session-heading"><div><div class="section-eyebrow" id="session-mode"></div><h1>Compound Identification</h1><p id="session-evidence"></p></div><div class="identify-actions"><button id="restart-identification">Restart</button><button id="change-identification">Choose a mode</button></div></div>
+      <div class="identify-grid">
+        <section class="identify-inspector" aria-label="Identification inspector">
+          <div class="identify-question-card">
+            <p id="guided-explanation" class="guided-explanation" hidden>The answer is selected for you. Click Next to follow the clues.</p>
+            <div class="identify-question-meta"><span id="identify-tech" class="identify-tech"></span><span id="identify-step"></span></div>
+            <h2 id="identify-question" tabindex="-1">Opening the full v7 model…</h2>
+            <p id="identify-unit" class="identify-unit"></p>
+            <div id="identify-answers" class="identify-answers" role="radiogroup" aria-label="Possible answers"></div>
+            <p id="identify-selection" class="identify-selection" aria-live="polite"></p>
+            <p id="identify-status" class="identify-status" role="status"></p>
+            <div id="synthetic-hint" class="synthetic-hint" hidden><label><input type="checkbox" id="show-reading"> Show the stored answer for this question</label><div id="stored-reading" hidden><p id="stored-answer"></p><button id="use-reading">Select this answer</button></div></div>
+            <div id="identify-controls" class="identify-controls"><button id="identify-back" disabled>← Back</button><button id="identify-next" class="primary" disabled>Next →</button></div>
+            <details id="question-help" class="question-help" hidden><summary>What does this mean?</summary><p id="technique-explanation" class="technique-explanation"></p><p id="question-detail"></p></details>
+            <button id="identify-finish" class="identify-finish" disabled>Show current result</button>
+            <div id="identify-result" hidden></div>
+          </div>
+          <details class="identify-ranking" id="identify-ranking"><summary>Candidate ranking <span id="ranking-count"></span></summary><ol id="candidate-list"></ol><p>Model probabilities are not measured identification accuracy.</p></details>
+          <section class="identify-history" aria-label="Path steps"><div class="section-eyebrow">PATH STEPS <span id="history-count"></span></div><ol id="identify-history"></ol><p id="history-empty">Your answers will appear here.</p></section>
+        </section>
+        <section id="own-data-guide" class="own-data-guide" hidden><span class="section-eyebrow">YOUR EVIDENCE</span><h2>Keep your spectra beside you.</h2><p>Read each question, select the answer that matches your observations, then click <strong>Next</strong>.</p><ul><li>Use <strong>Not sure</strong> when it is offered and the feature is uncertain.</li><li>For numerical questions, use the displayed units. For example, an M+ near 200 is <strong>4</strong> when the unit is M+ / 50.</li><li>Use <strong>Back</strong> to revise your last answer. SpecTree recalculates the next question from the revised history.</li></ul><p class="identify-note">The model ranks compounds within its v7 library. A high model probability does not establish the identity of an experimental sample.</p></section>
+        <section id="synthetic-data" class="synthetic-data" hidden>
+          <div class="synthetic-heading"><div><span class="section-eyebrow">SYNTHETIC EXAMPLE</span><h2>Read the supplied data.</h2></div><button id="new-synthetic">New example</button></div>
+          <p class="identify-note">Stored noisy test data. The source compound stays hidden until you choose to reveal it.</p>
+          <details class="synthetic-picker"><summary>Choose a known library compound</summary><label for="synthetic-search">Name, formula or PubChem CID</label><input id="synthetic-search" type="search" autocomplete="off" placeholder="For example, caffeine or 2519" aria-controls="synthetic-search-results"><div id="synthetic-search-results"></div></details>
+          <button id="reveal-synthetic">Reveal source compound</button><div id="synthetic-identity" hidden></div>
+          <div id="synthetic-spectra" class="synthetic-spectra"></div>
+        </section>
+      </div>
+    </section>
+    <p id="identify-error" class="identify-error" role="alert" hidden></p>
+    <footer class="identify-footer"><span id="identify-library">Full v7 candidate library</span><span>Local analysis · answers stay in this browser</span></footer>
+  </main>
+</body>
+</html>

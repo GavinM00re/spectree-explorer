@@ -179,6 +179,7 @@
     let cy, model, schema, scope, projected, expanded = new Set(), selectedNode = null, selectedK = null;
     let selectedPath = new Set(), memberPage = 0, visible = true, destroyed = false, rendering = false, loading = false;
     let retryTimer, lodTimer, labelTimer, noticeTimer, searchTimer, nodeTapTimer, lastTap = -1, lastTapTime = 0, labelMode = "auto", autoDetail = true, baseZoom = 1, lodPauseUntil = 0, miniTransform;
+    let inspectorActionFocused = false;
     const outcomeCache = new Map();
     const element = className => host.querySelector(`.${className}`);
     const named = k => library.name[k] || `CID ${library.id[k]}`;
@@ -189,7 +190,7 @@
     host.classList.add("pt-viewer");
     host.innerHTML = `<div class="pt-graph" role="img" aria-label="Radial v7 stored-reading decision tree. Branches spread outward in all directions. Drag to pan, scroll to zoom; search or use the branch inspector to navigate."></div>
       <div class="pt-top"><div class="pt-title"><span class="pt-eyebrow">FULL LIBRARY · 360° DECISION PATHS</span><h1>Full-library decision tree</h1><p class="pt-coverage" role="status">Opening the path tree…</p></div>
-        <div class="pt-search-wrap"><label for="pt-compound-search">Find a compound in the tree</label><div class="pt-search-input"><span aria-hidden="true">⌕</span><input id="pt-compound-search" class="pt-search" type="search" placeholder="Name, formula or PubChem CID" autocomplete="off" disabled><button class="pt-clear-search" title="Clear search" aria-label="Clear search">×</button></div><div class="pt-search-results" role="list"></div></div></div>
+        <div class="pt-search-wrap"><label for="pt-compound-search">Find a compound in the tree</label><div class="pt-search-input"><span aria-hidden="true">⌕</span><input id="pt-compound-search" class="pt-search" type="search" aria-label="Find a compound in the tree" placeholder="Name, formula or PubChem CID" autocomplete="off" disabled><button class="pt-clear-search" title="Clear search" aria-label="Clear search">×</button></div><div class="pt-search-results" role="list"></div></div></div>
       <div class="pt-scope" hidden><button data-pt-action="all">← Whole tree</button><span class="pt-scope-label"></span></div>
       <div class="pt-selection" hidden><span></span><button data-pt-action="fit-path">Fit path</button><button data-pt-action="clear-path" aria-label="Clear highlighted path">×</button></div>
       <div class="pt-toolbar"><button data-pt-action="zoom-in" aria-label="Zoom in">+</button><button data-pt-action="zoom-out" aria-label="Zoom out">−</button><span class="pt-zoom">100%</span><button data-pt-action="fit">Fit tree</button><button data-pt-action="reset">Reset</button><button data-pt-action="details">Details</button><button data-pt-action="export" title="Download the current view as a PNG">↓ PNG</button><label>Labels<select class="pt-labels"><option value="auto">Auto</option><option value="all">All</option><option value="off">Off</option></select></label><label class="pt-auto"><input type="checkbox" checked> Reveal on zoom</label></div>
@@ -379,6 +380,7 @@
       const detail=(label,value)=>`<div class="pt-detail-row"><span>${label}</span><strong>${value}</strong></div>`;
       element("pt-detail-content").innerHTML=`<span class="pt-type" style="--pt-color:${COLORS[question?.tech]||COLORS.terminal}">${id===model.root?"ROOT":terminal?"DECISION ENDPOINT":"QUESTION BRANCH"}</span>
         <h2>${terminal?"End of this decision path":escape(question?.id||"Stored reading tree")}</h2>
+        <details class="pt-help"><summary>How to explore</summary><p>Drag the blank canvas to move around. Scroll or pinch to zoom; the + and − buttons work too.</p><p>Select a dot to see its question, then choose an answer branch below to follow the next step. Search for a compound to highlight its stored path. Use <strong>Fit tree</strong> to see the current view, or <strong>Reset</strong> to return to the whole tree.</p></details>
         <div class="pt-stats"><div><b>${fmt(count)}</b><span>stored ${count===1?"reading":"readings"}</span></div><div><b>${model.depth[id]}</b><span>answers so far</span></div></div>
         ${terminal?`<p class="pt-question">${escape(REASONS[model.terminalReason[id]]||"Path ended")}</p>`:`<div class="pt-small-label">NEXT QUESTION · ${escape(question?.tech||"")}</div><p class="pt-question">${escape(question?.text||"")}</p>`}
         <div class="pt-detail-actions">${!terminal?`<button data-pt-action="${expanded.has(id)?"collapse":"expand"}" data-node="${id}">${expanded.has(id)?"Collapse branch":"Expand next answers"}</button><button data-pt-action="branch" data-node="${id}">Open branch ↗</button>`:""}<button data-pt-action="focus" data-node="${id}">Locate node</button></div>
@@ -391,6 +393,10 @@
       openInspector();
       scheduleLabels();
       if(!keepPage)element("pt-inspector").scrollTop=0;
+      if(inspectorActionFocused){
+        const heading=element("pt-detail-content").querySelector("h2");
+        heading.tabIndex=-1;heading.focus({preventScroll:true});
+      }
       options.onInspect?.({id,question:q,count,depth:model.depth[id],terminal,history});
     }
     function openInspector() {
@@ -407,8 +413,10 @@
       }
     }
     function closeInspector() {
+      const returnFocus=element("pt-inspector").contains(document.activeElement);
       const oldWidth=cy?.width(), pan=cy?.pan();
       element("pt-inspector").hidden=true;host.classList.remove("pt-details-open");
+      if(returnFocus)host.querySelector('[data-pt-action="details"]').focus({preventScroll:true});
       if(cy){cy.resize();cy.pan({x:pan.x+(cy.width()-oldWidth)/2,y:pan.y});updateViewport();}
     }
     function search(query) {
@@ -531,6 +539,10 @@
       } finally {loading=false;}
     }
 
+    element("pt-inspector").addEventListener("click",event=>{
+      inspectorActionFocused=event.target.closest("button")===document.activeElement;
+      setTimeout(()=>{inspectorActionFocused=false;},0);
+    },true);
     host.addEventListener("click",event=>{
       const compound=event.target.closest("[data-pt-compound]");if(compound){cancelNodeTap();selectCompound(Number(compound.dataset.ptCompound));return;}
       const button=event.target.closest("[data-pt-action]");if(!button)return;
